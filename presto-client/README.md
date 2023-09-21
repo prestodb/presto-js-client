@@ -8,4 +8,4 @@ Run `nx build presto-client` to build the library.
 
 ## Testing
 
-Run `nx test presto-client` to execute the unit tests via [Jest](https://jestjs.io).
+Run `npm run test presto-client` to execute the unit tests via [Jest](https://jestjs.io).
