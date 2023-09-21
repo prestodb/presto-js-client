@@ -1,6 +1,6 @@
 # Presto JS Client
 
-This is a JavaScript Presto client that connects to Presto's REST API to run queries.
+This is a Presto JavaScript client that connects to Presto via Presto's REST API to run queries.
 
 ## Installation
 
