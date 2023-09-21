@@ -17,7 +17,7 @@ export class PrestoClient {
     this.timezone = timezone
     this.user = user
 
-    this.headers = { 'X-Presto-Client-Info': 'bhuma-node-client' }
+    this.headers = { 'X-Presto-Client-Info': 'presto-js-client' }
     if (this.user) {
       this.headers['X-Presto-User'] = this.user
     }
