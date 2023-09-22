@@ -4,7 +4,11 @@ This library was generated with [Nx](https://nx.dev).
 
 ## Building
 
-Run `nx build presto-client` to build the library.
+Run `npm run build presto-client` to build the library.
+
+## Linting
+
+Run `npm run lint presto-client` to run the linter on the library.
 
 ## Testing
 

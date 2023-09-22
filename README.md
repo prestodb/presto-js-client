@@ -5,19 +5,19 @@ This is a Presto JavaScript client that connects to Presto via Presto's REST API
 ## Installation
 
 ```sh
-npm install @presto/client
+npm install @prestodb/presto-js-client
 ```
 
 ## Usage
 
-Import the PrestoClient class from `@presto/client`.
+Import the PrestoClient class from `@prestodb/presto-js-client`.
 
 Create a new instance by passing the connection parameters.
 
 ### Example
 
 ```typescript
-import { GetPrestoDataParams, PrestoClient } from '@presto/client'
+import { GetPrestoDataParams, PrestoClient } from '@prestodb/presto-js-client'
 
 ...
 
