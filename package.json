@@ -1,9 +1,10 @@
 {
   "name": "presto-js-client",
   "version": "0.0.0",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "scripts": {
     "build": "nx build",
+    "build:presto-client": "nx build presto-client",
     "commit": "cz",
     "format": "nx format",
     "format:check": "nx format:check",

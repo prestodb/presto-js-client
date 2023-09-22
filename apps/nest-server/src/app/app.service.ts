@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { PrestoClient } from '@presto/client'
+import { PrestoClient } from '@prestodb/presto-js-client'
 
 @Injectable()
 export class AppService {

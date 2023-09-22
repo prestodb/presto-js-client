@@ -10,7 +10,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "paths": {
-      "@presto/client": ["presto-client/src/index.ts"]
+      "@prestodb/presto-js-client": ["presto-client/src/index.ts"]
     },
     "rootDir": ".",
     "skipDefaultLibCheck": true,
