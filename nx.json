@@ -7,12 +7,7 @@
   },
   "targetDefaults": {
     "lint": {
-      "inputs": [
-        "{workspaceRoot}/.eslintignore",
-        "{workspaceRoot}/.eslintrc.json",
-        "{workspaceRoot}/eslint.config.js",
-        "default"
-      ]
+      "inputs": ["{workspaceRoot}/.eslintignore", "{workspaceRoot}/.eslintrc.json", "default"]
     },
     "test": {
       "inputs": ["default", "^default", "{workspaceRoot}/jest.preset.js"]
