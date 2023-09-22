@@ -1,9 +1,9 @@
 export interface PrestoClientConfig {
-  catalog: string
+  catalog?: string
   host?: string
   interval?: number
   port?: number
-  schema: string
+  schema?: string
   timezone?: string
   user: string
 }

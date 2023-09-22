@@ -2,10 +2,10 @@ import { PrestoClientConfig, PrestoQuery, PrestoResponse } from './client.types'
 
 export class PrestoClient {
   private baseUrl: string
-  private catalog: string
+  private catalog?: string
   private headers: Record<string, string>
   private interval: number
-  private schema: string
+  private schema?: string
   private timezone?: string
   private user: string
 
@@ -21,12 +21,6 @@ export class PrestoClient {
     if (this.user) {
       this.headers['X-Presto-User'] = this.user
     }
-    if (this.schema) {
-      this.headers['X-Presto-Schema'] = this.schema
-    }
-    if (this.catalog) {
-      this.headers['X-Presto-Catalog'] = this.catalog
-    }
     if (this.timezone) {
       this.headers['X-Presto-Time-Zone'] = this.timezone
     }
@@ -34,17 +28,45 @@ export class PrestoClient {
     // TODO: Set up auth
   }
 
-  private request(url: string, method: string, body: string | null = null) {
+  private request({
+    body,
+    headers,
+    method,
+    url,
+  }: {
+    body?: string
+    headers?: Record<string, string>
+    method: string
+    url: string
+  }) {
     return fetch(url, {
       body,
-      headers: this.headers,
+      headers,
       method,
     })
   }
 
-  async query(query: string): Promise<PrestoQuery> {
-    // TODO: Checks for valid schema and catalog
-    const firstResponse = await this.request(this.baseUrl, 'POST', query)
+  async query(
+    query: string,
+    options?: {
+      catalog?: string
+      schema?: string
+    },
+  ): Promise<PrestoQuery> {
+    const catalog = options?.catalog || this.catalog
+    const schema = options?.schema || this.schema
+
+    if (!catalog || !schema) {
+      throw new Error(`The catalog or schema are missing`)
+    }
+
+    const headers = {
+      ...this.headers,
+      'X-Presto-Catalog': catalog,
+      'X-Presto-Schema': schema,
+    }
+
+    const firstResponse = await this.request({ body: query, headers, method: 'POST', url: this.baseUrl })
 
     if (firstResponse.status !== 200) {
       throw new Error(`Query failed: ${JSON.stringify(await firstResponse.text())}`)
@@ -61,7 +83,7 @@ export class PrestoClient {
     const data = []
 
     do {
-      const response = await this.request(nextUri, 'GET')
+      const response = await this.request({ method: 'GET', url: nextUri })
 
       if (response.status !== 200) {
         throw new Error(`Query failed: ${JSON.stringify(await response.text())}`)
@@ -70,7 +92,7 @@ export class PrestoClient {
       const prestoResponse = (await response.json()) as PrestoResponse
 
       nextUri = prestoResponse?.nextUri
-      queryId = prestoResponse.id
+      queryId = prestoResponse?.id
 
       const columnsAreEmpty = !columns.length
       if (columnsAreEmpty && prestoResponse.columns?.length) {
@@ -80,7 +102,7 @@ export class PrestoClient {
         data.push(...prestoResponse.data)
       }
 
-      await delay(this.interval)
+      await this.delay()
     } while (nextUri !== undefined)
 
     return {
@@ -89,8 +111,8 @@ export class PrestoClient {
       queryId,
     }
   }
-}
 
-function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms))
+  private delay() {
+    return new Promise(resolve => setTimeout(resolve, this.interval))
+  }
 }
