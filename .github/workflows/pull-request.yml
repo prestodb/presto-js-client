@@ -7,8 +7,8 @@ on:
     types: [opened, reopened, synchronize]
 
 jobs:
-  check-format:
-    name: Format
+  build:
+    name: Build
 
     runs-on: ubuntu-latest
 
@@ -31,14 +31,39 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Run format of affected projects
+      - name: Run build
+        run: npm run build presto-client
+
+  check-format:
+    name: Check Format
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch Git entire history for all branches and tags
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          node-version-file: '.nvmrc'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Check format
         run: npm run format:check
 
   lint:
     name: Lint
 
-    needs: [check-format]
-
     runs-on: ubuntu-latest
 
     steps:
@@ -60,13 +85,11 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Run lint of affected projects
+      - name: Run lint
         run: npm run lint presto-client
 
-  unit-test:
-    name: Unit-test
-
-    needs: [lint]
+  test:
+    name: Test
 
     runs-on: ubuntu-latest
 
@@ -89,34 +112,5 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Run unit-tests of affected projects
+      - name: Run tests
         run: npm run test presto-client
-
-  build:
-    name: Build
-
-    needs: [unit-test]
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Fetch Git entire history for all branches and tags
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.ref }}
-
-      - name: Derive appropriate SHAs for base and head for `nx affected` commands
-        uses: nrwl/nx-set-shas@v2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          cache: 'npm'
-          node-version-file: '.nvmrc'
-
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Run build of affected projects
-        run: npm run build presto-client
