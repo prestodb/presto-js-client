@@ -61,7 +61,7 @@ jobs:
         run: npm ci
 
       - name: Run lint of affected projects
-        run: npm run affected:lint -- --max-warnings=0 --parallel
+        run: npm run lint presto-client
 
   unit-test:
     name: Unit-test
@@ -90,7 +90,7 @@ jobs:
         run: npm ci
 
       - name: Run unit-tests of affected projects
-        run: npm run affected:test
+        run: npm run test presto-client
 
   build:
     name: Build
@@ -119,4 +119,4 @@ jobs:
         run: npm ci
 
       - name: Run build of affected projects
-        run: npm run affected:build
+        run: npm run build presto-client
