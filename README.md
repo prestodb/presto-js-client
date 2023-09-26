@@ -17,7 +17,7 @@ Create a new instance by passing the connection parameters.
 ### Example
 
 ```typescript
-import { GetPrestoDataParams, PrestoClient } from '@prestodb/presto-js-client'
+import PrestoClient from '@prestodb/presto-js-client'
 
 ...
 

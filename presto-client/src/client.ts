@@ -56,14 +56,15 @@ export class PrestoClient {
     const catalog = options?.catalog || this.catalog
     const schema = options?.schema || this.schema
 
-    if (!catalog || !schema) {
-      throw new Error(`The catalog or schema are missing`)
-    }
-
     const headers = {
       ...this.headers,
-      'X-Presto-Catalog': catalog,
-      'X-Presto-Schema': schema,
+    }
+
+    if (catalog) {
+      headers['X-Presto-Catalog'] = catalog
+    }
+    if (schema) {
+      headers['X-Presto-Schema'] = schema
     }
 
     const firstResponse = await this.request({ body: query, headers, method: 'POST', url: this.baseUrl })
@@ -116,3 +117,5 @@ export class PrestoClient {
     return new Promise(resolve => setTimeout(resolve, this.interval))
   }
 }
+
+export default PrestoClient

@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common'
-import { PrestoClient } from '@prestodb/presto-js-client'
+import PrestoClient, { PrestoClientConfig } from '@prestodb/presto-js-client'
 
 @Injectable()
 export class AppService {
   async getData(): Promise<unknown> {
-    const client = new PrestoClient({
+    const clientParams: PrestoClientConfig = {
       catalog: 'tpcds',
       host: 'http://localhost',
       port: 8080,
       schema: 'sf10',
       user: 'root',
-    })
+    }
+    const client = new PrestoClient(clientParams)
     const results = await client.query(`SELECT * FROM call_center`)
     return { columns: results.columns, rows: results.data }
   }
