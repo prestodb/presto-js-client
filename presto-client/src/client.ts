@@ -6,18 +6,20 @@ export class PrestoClient {
   private headers: Record<string, string>
   private interval: number
   private schema?: string
+  private source?: string
   private timezone?: string
   private user: string
 
-  constructor({ catalog, host, interval, port, schema, timezone, user }: PrestoClientConfig) {
+  constructor({ catalog, host, interval, port, schema, source, timezone, user }: PrestoClientConfig) {
     this.baseUrl = `${host || 'http://localhost'}:${port || 8080}/v1/statement`
     this.catalog = catalog
     this.interval = interval || 100
     this.schema = schema
+    this.source = source
     this.timezone = timezone
     this.user = user
 
-    this.headers = { 'X-Presto-Client-Info': 'presto-js-client' }
+    this.headers = { 'X-Presto-Client-Info': this.source || 'presto-js-client' }
     if (this.user) {
       this.headers['X-Presto-User'] = this.user
     }

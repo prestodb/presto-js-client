@@ -4,6 +4,7 @@ export interface PrestoClientConfig {
   interval?: number
   port?: number
   schema?: string
+  source?: string
   timezone?: string
   user: string
 }
