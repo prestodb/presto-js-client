@@ -1,0 +1,116 @@
+name: Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, reopened, synchronize]
+
+jobs:
+  build:
+    name: Build
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch Git entire history for all branches and tags
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          node-version-file: '.nvmrc'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run build
+        run: npm run build presto-client
+
+  check-format:
+    name: Check Format
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch Git entire history for all branches and tags
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          node-version-file: '.nvmrc'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Check format
+        run: npm run format:check
+
+  lint:
+    name: Lint
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch Git entire history for all branches and tags
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          node-version-file: '.nvmrc'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint presto-client
+
+  test:
+    name: Test
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch Git entire history for all branches and tags
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          node-version-file: '.nvmrc'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm run test presto-client

@@ -1,0 +1,44 @@
+{
+  "name": "presto-client",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "presto-client/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/presto-client",
+        "main": "presto-client/src/index.ts",
+        "tsConfig": "presto-client/tsconfig.lib.json",
+        "assets": ["presto-client/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["presto-client/**/*.ts", "presto-client/package.json"]
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs presto-client {args.ver} {args.tag}",
+      "dependsOn": ["build", "lint", "test"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "presto-client/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    }
+  },
+  "tags": []
+}

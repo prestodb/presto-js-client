@@ -1,0 +1,28 @@
+{
+  "extends": "nx/presets/npm.json",
+  "pluginsConfig": {
+    "@nx/js": {
+      "analyzeSourceFiles": true
+    }
+  },
+  "targetDefaults": {
+    "lint": {
+      "inputs": ["{workspaceRoot}/.eslintignore", "{workspaceRoot}/.eslintrc.json", "default"]
+    },
+    "test": {
+      "inputs": ["default", "^default", "{workspaceRoot}/jest.preset.js"]
+    }
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "e2e", "lint", "test"]
+      }
+    }
+  },
+  "workspaceLayout": {
+    "projectNameAndRootFormat": "as-provided"
+  },
+  "$schema": "./node_modules/nx/schemas/nx-schema.json"
+}
