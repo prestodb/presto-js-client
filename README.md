@@ -41,6 +41,7 @@ The Presto client can be configured with the following parameters:
 - `user`: The username to use for authentication. (Default: `undefined`)
 - `catalog`: The default catalog to use for queries. (Default: `undefined`)
 - `schema`: The default schema to use for queries. (Default: `undefined`)
+- `source`: The name of the source you want to use for reporting purposes (Default: `presto-js-client`)
 - `timezone`: The timezone to use for queries. (Default: `undefined`)
 - `interval`: The interval in milliseconds between checks for the status of a running query. (Default: `100`)
 

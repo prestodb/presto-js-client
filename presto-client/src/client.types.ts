@@ -34,7 +34,6 @@ export interface PrestoResponse {
 
 export interface PrestoQuery {
   columns?: Array<PrestoColumn>
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: unknown[][]
   queryId?: string
 }
