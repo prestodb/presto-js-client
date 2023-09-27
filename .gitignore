@@ -14,6 +14,10 @@ node_modules
 # Misc
 npm-debug.log
 
+# Next.js
+.next
+
 # System Files
 .DS_Store
 Thumbs.db
+
