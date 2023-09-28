@@ -1,0 +1,66 @@
+{
+  "name": "nextjs",
+  "projectType": "application",
+  "sourceRoot": "apps/nextjs",
+  "tags": [],
+  "targets": {
+    "build": {
+      "configurations": {
+        "development": {
+          "outputPath": "apps/nextjs"
+        },
+        "production": {}
+      },
+      "executor": "@nx/next:build",
+      "options": {
+        "outputPath": "dist/apps/nextjs"
+      },
+      "outputs": ["{options.outputPath}"]
+    },
+    "export": {
+      "executor": "@nx/next:export",
+      "options": {
+        "buildTarget": "nextjs:build:production"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/nextjs/**/*.{ts,tsx,js,jsx}"]
+      },
+      "outputs": ["{options.outputFile}"]
+    },
+    "serve": {
+      "configurations": {
+        "development": {
+          "buildTarget": "nextjs:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "nextjs:build:production",
+          "dev": false
+        }
+      },
+      "executor": "@nx/next:server",
+      "options": {
+        "buildTarget": "nextjs:build",
+        "dev": true
+      }
+    },
+    "test": {
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      },
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "apps/nextjs/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"]
+    }
+  },
+  "$schema": "../../node_modules/nx/schemas/project-schema.json"
+}

@@ -4,5 +4,5 @@
 /coverage
 /dist
 
-# Semantic Release
-CHANGELOG.md
+# GitHub
+.github

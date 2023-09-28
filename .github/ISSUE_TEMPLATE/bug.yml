@@ -1,0 +1,40 @@
+name: 🐞 Bug Report
+description: This form is to report unexpected behaviors.
+labels: ['type: bug']
+body:
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: Current Behavior
+      description: What is the behavior that currently you experience?
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: What is the behavior that you expect to happen?
+    validations:
+      required: true
+  - type: input
+    id: repo
+    attributes:
+      label: GitHub Repo
+      description: |
+        This is extremely important! If this issue is reproduce-able on https://github.com/prestodb/presto-js-client/tree/main/apps, you may use that as the repo.
+        If not, please do take a few minutes of your time to create a repo to help us reproduce the issue.
+        This is the best way to help us reproduce the issue and fix it as soon as possible.
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Please provide some instructions to reproduce the issue in the repo provided above. Be as detailed as possible.
+      value: |
+        1.
+    validations:
+      required: true
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Information
+      description: Is there any additional information that you can provide?
