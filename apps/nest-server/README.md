@@ -1,4 +1,4 @@
-# Nest Server
+# NestJS Application
 
 This application was generated using [Nx](https://nx.dev).
 
@@ -18,10 +18,14 @@ To run this application, follow these steps:
    npm run serve nest-server
    ```
 
-3. After starting the Nest Server, you can make a `GET` request to the following URL to see the response from querying the local Presto container using the `prestodb-js-client` library:
+3. After starting the Nest Server, you can make a `GET` request to the following endpoint to see the response from querying the local Presto container using the `prestodb-js-client` library:
 
    ```
-   http://localhost:3000/api/call-centers
+   curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:3000/api/call-centers | json
    ```
+
+   Output:
+
+   ![Alt text](image.png)
 
 Make sure you have all the necessary dependencies installed and configured before running the commands above.

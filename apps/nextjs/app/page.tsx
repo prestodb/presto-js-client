@@ -1,5 +1,15 @@
 import styles from './page.module.css'
 
+interface CallCenter {
+  cc_call_center_id: string
+  cc_city: string
+  cc_county: string
+  cc_manager: string
+  cc_market_manager: string
+  cc_name: string
+  cc_state: string
+}
+
 export default async function Index() {
   const { data } = await getData()
 
@@ -15,17 +25,17 @@ export default async function Index() {
           </div>
           <div id='commands' className='rounded shadow'>
             <p>Here are some Call Centers in the U.S.A.:</p>
-            {data?.map((callCenter: any) => {
+            {data?.map((callCenter, index) => {
               return (
-                <details key={callCenter['cc_call_center_id']}>
+                <details key={`${callCenter.cc_call_center_id}-${index}`}>
                   <summary>
-                    {`${callCenter['cc_name']} - ${callCenter['cc_county']} - ${callCenter['cc_city']} - ${callCenter['cc_state']}`}
+                    {`${callCenter.cc_name} - ${callCenter.cc_county} - ${callCenter.cc_city} - ${callCenter.cc_state}`}
                   </summary>
                   <pre>
                     <span>Manager</span>
-                    {callCenter['cc_manager']}
+                    {callCenter.cc_manager}
                     <span>Market Manager</span>
-                    {callCenter['cc_market_manager']}
+                    {callCenter.cc_market_manager}
                   </pre>
                 </details>
               )
@@ -55,5 +65,5 @@ async function getData() {
     throw new Error('Failed to fetch data')
   }
 
-  return res.json()
+  return res.json() as Promise<{ data: CallCenter[] }>
 }

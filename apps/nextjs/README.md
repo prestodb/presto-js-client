@@ -24,6 +24,10 @@ To run this Next.js application, please follow these steps:
    http://localhost:4200/
    ```
 
-   This will allow you to access the Next.js server-side rendering (SSR) application, which queries the local Presto container using the `prestodb-js-client` library.
+   This will allow you to access the Next.js server-side rendered (SSR) application, which queries the local Presto container using the `prestodb-js-client` library.
+
+   Output:
+
+   ![Alt text](image.png)
 
 Make sure to ensure that all necessary dependencies are installed and properly configured before running the provided commands.
