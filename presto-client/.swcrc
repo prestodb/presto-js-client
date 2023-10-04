@@ -1,23 +1,4 @@
 {
-  "jsc": {
-    "target": "es2017",
-    "parser": {
-      "syntax": "typescript",
-      "decorators": true,
-      "dynamicImport": true
-    },
-    "transform": {
-      "decoratorMetadata": true,
-      "legacyDecorator": true
-    },
-    "keepClassNames": true,
-    "externalHelpers": true,
-    "loose": true
-  },
-  "module": {
-    "type": "es6"
-  },
-  "sourceMaps": true,
   "exclude": [
     "jest.config.ts",
     ".*\\.spec.tsx?$",
@@ -25,5 +6,24 @@
     "./src/jest-setup.ts$",
     "./**/jest-setup.ts$",
     ".*.js$"
-  ]
+  ],
+  "jsc": {
+    "externalHelpers": true,
+    "keepClassNames": true,
+    "loose": true,
+    "parser": {
+      "decorators": true,
+      "dynamicImport": true,
+      "syntax": "typescript"
+    },
+    "target": "es2017",
+    "transform": {
+      "decoratorMetadata": true,
+      "legacyDecorator": true
+    }
+  },
+  "module": {
+    "type": "commonjs"
+  },
+  "sourceMaps": true
 }
