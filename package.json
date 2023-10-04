@@ -11,16 +11,16 @@
   "repository": "https://github.com/prestodb/presto-js-client",
   "scripts": {
     "build": "nx build",
-    "build:presto-client": "nx build presto-client",
     "commit": "cz",
     "format": "nx format",
     "format:check": "nx format:check",
-    "format:write": "nx format:write",
     "lint": "nx lint",
+    "local-registry": "nx local-registry",
     "nx": "nx",
     "prepare": "husky install",
     "presto:up": "docker compose -f ./docker-compose/presto/docker-compose.yml -p presto up",
-    "publish": "nx publish",
+    "publish": "nx version",
+    "publish:local": "nx version-local",
     "serve": "nx serve",
     "test": "nx test"
   },
@@ -42,8 +42,9 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "~17.0.0",
-    "@commitlint/config-angular": "~17.0.0",
+    "@commitlint/cli": "~17.7.0",
+    "@commitlint/config-conventional": "~17.7.0",
+    "@jscutlery/semver": "~3.1.0",
     "@nestjs/schematics": "^10.0.1",
     "@nestjs/testing": "^10.0.2",
     "@nx/eslint-plugin": "16.8.1",
