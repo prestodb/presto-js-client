@@ -2,6 +2,8 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [0.1.0](https://github.com/prestodb/presto-js-client/compare/presto-client-0.1.0-beta.0...presto-client-0.1.0) (2023-10-04)
+
 ## 0.1.0-beta.0 (2023-10-04)
 
 
