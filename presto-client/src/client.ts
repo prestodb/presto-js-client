@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common'
 import { PrestoClientConfig, PrestoQuery, PrestoResponse } from './client.types'
 
 export class PrestoClient {
@@ -9,6 +10,7 @@ export class PrestoClient {
   private source?: string
   private timezone?: string
   private user: string
+  private readonly logger = new Logger(PrestoClient.name)
 
   constructor({ catalog, host, interval, port, schema, source, timezone, user }: PrestoClientConfig) {
     this.baseUrl = `${host || 'http://localhost'}:${port || 8080}/v1/statement`
@@ -90,12 +92,28 @@ export class PrestoClient {
 
     do {
       const response = await this.request({ method: 'GET', url: nextUri })
+      const responseJson = await response.json()
+
+      // Server is overloaded, wait a bit
+      if (response.status === 503) {
+        await this.delay()
+        continue
+      }
 
       if (response.status !== 200) {
         throw new Error(`Query failed: ${JSON.stringify(await response.text())}`)
       }
 
-      const prestoResponse = (await response.json()) as PrestoResponse
+      const prestoResponse = responseJson as PrestoResponse
+      const { error, stats } = prestoResponse
+      this.logger.debug(stats.state)
+      if (stats.state === 'FINISHED') {
+        this.logger.log(JSON.stringify(responseJson, null, 2))
+      }
+      if (error) {
+        this.logger.error(`error: ${JSON.stringify(error.errorName)}`)
+        throw new Error(error.errorName)
+      }
 
       nextUri = prestoResponse?.nextUri
       queryId = prestoResponse?.id
@@ -108,7 +126,7 @@ export class PrestoClient {
         data.push(...prestoResponse.data)
       }
 
-      await this.delay()
+      // await this.delay()
     } while (nextUri !== undefined)
 
     return {
