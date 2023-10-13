@@ -2,10 +2,10 @@
   "name": "presto-js-client",
   "description": "JavaScript client for Presto",
   "keywords": [
-    "javascript",
+    "database",
     "presto",
     "prestodb",
-    "typescript"
+    "sql"
   ],
   "license": "Apache-2.0",
   "repository": "https://github.com/prestodb/presto-js-client",
