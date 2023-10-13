@@ -6,5 +6,20 @@
   },
   "type": "commonjs",
   "main": "./src/index.js",
-  "typings": "./src/index.d.ts"
+  "typings": "./src/index.d.ts",
+  "keywords": [
+    "javascript",
+    "presto",
+    "prestodb",
+    "typescript"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prestodb/presto-js-client",
+    "directory": "presto-client"
+  },
+  "bugs": {
+    "url": "https://github.com/prestodb/presto-js-client/issues"
+  }
 }
