@@ -93,7 +93,6 @@ export class PrestoClient {
 
     do {
       const response = await this.request({ method: 'GET', url: nextUri })
-      const responseJson = await response.json()
 
       // Server is overloaded, wait a bit
       if (response.status === 503) {
@@ -105,7 +104,11 @@ export class PrestoClient {
         throw new Error(`Query failed: ${JSON.stringify(await response.text())}`)
       }
 
-      const prestoResponse = responseJson as PrestoResponse
+      const prestoResponse = (await response.json()) as PrestoResponse
+      if (!prestoResponse) {
+        throw new Error(`Query failed with an empty response from the server.`)
+      }
+
       const { error } = prestoResponse
       if (error) {
         throw new Error(error.errorName)
