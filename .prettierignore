@@ -6,3 +6,6 @@
 
 # GitHub
 .github
+
+# Semantic Release
+CHANGELOG.md
