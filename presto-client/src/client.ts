@@ -1,4 +1,3 @@
-import { Logger } from '@nestjs/common'
 import { PrestoClientConfig, PrestoQuery, PrestoResponse } from './client.types'
 
 export class PrestoClient {
@@ -11,7 +10,6 @@ export class PrestoClient {
   private source?: string
   private timezone?: string
   private user: string
-  private readonly logger = new Logger(PrestoClient.name)
 
   constructor({ catalog, host, interval, port, schema, source, timezone, user }: PrestoClientConfig) {
     this.baseUrl = `${host || 'http://localhost'}:${port || 8080}/v1/statement`
@@ -108,13 +106,8 @@ export class PrestoClient {
       }
 
       const prestoResponse = responseJson as PrestoResponse
-      const { error, stats } = prestoResponse
-      this.logger.debug(stats.state)
-      if (stats.state === 'FINISHED') {
-        this.logger.log(JSON.stringify(responseJson, null, 2))
-      }
+      const { error } = prestoResponse
       if (error) {
-        this.logger.error(`error: ${JSON.stringify(error.errorName)}`)
         throw new Error(error.errorName)
       }
 
