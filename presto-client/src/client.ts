@@ -5,7 +5,8 @@ export class PrestoClient {
   private baseUrl: string
   private catalog?: string
   private headers: Record<string, string>
-  private interval: number
+  private interval?: number
+  private retryInterval: number
   private schema?: string
   private source?: string
   private timezone?: string
@@ -15,11 +16,13 @@ export class PrestoClient {
   constructor({ catalog, host, interval, port, schema, source, timezone, user }: PrestoClientConfig) {
     this.baseUrl = `${host || 'http://localhost'}:${port || 8080}/v1/statement`
     this.catalog = catalog
-    this.interval = interval || 100
+    this.interval = interval
     this.schema = schema
     this.source = source
     this.timezone = timezone
     this.user = user
+
+    this.retryInterval = 500
 
     this.headers = {
       'X-Presto-Client-Info': 'presto-js-client',
@@ -96,7 +99,7 @@ export class PrestoClient {
 
       // Server is overloaded, wait a bit
       if (response.status === 503) {
-        await this.delay()
+        await this.delay(this.retryInterval)
         continue
       }
 
@@ -126,7 +129,9 @@ export class PrestoClient {
         data.push(...prestoResponse.data)
       }
 
-      // await this.delay()
+      if (this.interval) {
+        await this.delay(this.interval)
+      }
     } while (nextUri !== undefined)
 
     return {
@@ -136,8 +141,8 @@ export class PrestoClient {
     }
   }
 
-  private delay() {
-    return new Promise(resolve => setTimeout(resolve, this.interval))
+  private delay(milliseconds: number) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
   }
 }
 
