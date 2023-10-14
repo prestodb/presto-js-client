@@ -1,25 +1,25 @@
 {
   "name": "@prestodb/presto-js-client",
   "version": "0.1.0",
-  "dependencies": {
-    "@swc/helpers": "~0.5.0"
-  },
-  "type": "commonjs",
-  "main": "./src/index.js",
-  "typings": "./src/index.d.ts",
   "keywords": [
     "database",
     "presto",
     "prestodb",
     "sql"
   ],
-  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/prestodb/presto-js-client/issues"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/prestodb/presto-js-client",
     "directory": "presto-client"
   },
-  "bugs": {
-    "url": "https://github.com/prestodb/presto-js-client/issues"
+  "license": "Apache-2.0",
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
+  "dependencies": {
+    "@swc/helpers": "~0.5.0"
   }
 }
