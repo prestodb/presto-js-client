@@ -120,7 +120,7 @@ npx nx serve nest-server
 Check the server is live and you can make queries on this URL:
 
 ```
-http://localhost:3000/api/call-centers
+http://localhost:3000/api/query-test
 ```
 
 ### NextJS Server Side Rendered app

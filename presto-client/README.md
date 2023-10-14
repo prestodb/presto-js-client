@@ -80,7 +80,7 @@ const client = new PrestoClient({
   catalog: 'tpcds',
   host: 'http://localhost',
   port: 8080,
-  schema: 'sf10',
+  schema: 'sf1',
   user: 'root',
 })
 

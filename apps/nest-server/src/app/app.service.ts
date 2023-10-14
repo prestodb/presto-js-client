@@ -8,7 +8,7 @@ export class AppService {
       catalog: 'tpch',
       host: 'http://localhost',
       port: 8080,
-      schema: 'sf10',
+      schema: 'sf1',
       user: 'root',
     }
     const client = new PrestoClient(clientParams)

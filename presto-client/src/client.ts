@@ -109,9 +109,8 @@ export class PrestoClient {
         throw new Error(`Query failed with an empty response from the server.`)
       }
 
-      const { error } = prestoResponse
-      if (error) {
-        throw new Error(error.errorName)
+      if (prestoResponse.error) {
+        throw new Error(prestoResponse.error.errorName)
       }
 
       nextUri = prestoResponse?.nextUri

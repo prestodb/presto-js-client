@@ -21,7 +21,7 @@ To run this application, follow these steps:
 3. After starting the Nest Server, you can make a `GET` request to the following endpoint to see the response from querying the local Presto container using the `prestodb-js-client` library:
 
    ```
-   curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:3000/api/call-centers | json
+   curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:3000/api/query-test | json
    ```
 
    Output:

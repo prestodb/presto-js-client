@@ -11,7 +11,7 @@ npm run presto:up
 Use the Presto-CLI to run queries:
 
 ```
-docker exec -it prestodb presto-cli --catalog tpcds --schema sf10
+docker exec -it prestodb presto-cli --catalog tpcds --schema sf1
 ```
 
 Examples:
