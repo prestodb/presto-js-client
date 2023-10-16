@@ -8,7 +8,7 @@
     ".*.js$"
   ],
   "jsc": {
-    "externalHelpers": true,
+    "externalHelpers": false,
     "keepClassNames": true,
     "loose": true,
     "parser": {

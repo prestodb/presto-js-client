@@ -1,9 +1,7 @@
 {
   "name": "@prestodb/presto-js-client",
   "version": "0.1.0",
-  "dependencies": {
-    "@swc/helpers": "~0.5.0"
-  },
+  "dependencies": {},
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts"
