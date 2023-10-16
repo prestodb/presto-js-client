@@ -1,6 +1,5 @@
 {
   "name": "presto-js-client",
-  "private": true,
   "description": "JavaScript client for Presto",
   "keywords": [
     "database",
