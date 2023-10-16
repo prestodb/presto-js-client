@@ -25,5 +25,5 @@
   "module": {
     "type": "commonjs"
   },
-  "sourceMaps": true
+  "sourceMaps": false
 }

@@ -2,13 +2,16 @@
   "name": "presto-js-client",
   "description": "JavaScript client for Presto",
   "keywords": [
-    "javascript",
+    "database",
     "presto",
     "prestodb",
-    "typescript"
+    "sql"
   ],
-  "license": "Apache-2.0",
   "repository": "https://github.com/prestodb/presto-js-client",
+  "license": "Apache-2.0",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "build": "nx build",
     "commit": "cz",
@@ -90,11 +93,7 @@
     "verdaccio": "^5.0.4"
   },
   "engines": {
-    "npm": ">=9.6",
-    "node": ">=18.17"
-  },
-  "private": true,
-  "workspaces": [
-    "packages/*"
-  ]
+    "node": ">=18.17",
+    "npm": ">=9.6"
+  }
 }

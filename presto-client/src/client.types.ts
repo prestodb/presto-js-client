@@ -26,10 +26,23 @@ export interface PrestoColumn {
 export interface PrestoResponse {
   columns: Array<PrestoColumn>
   data: unknown[][]
-  error: unknown
+  error: PrestoError
   id: string
+  stats: PrestoStats
   nextUri: string
   updateType: string
+}
+
+export interface PrestoError {
+  errorCode: number
+  errorName: string
+  errorType: string
+  failureInfo: unknown
+  message: string
+}
+
+export interface PrestoStats {
+  state: string
 }
 
 export interface PrestoQuery {

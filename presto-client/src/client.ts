@@ -4,7 +4,8 @@ export class PrestoClient {
   private baseUrl: string
   private catalog?: string
   private headers: Record<string, string>
-  private interval: number
+  private interval?: number
+  private retryInterval: number
   private schema?: string
   private source?: string
   private timezone?: string
@@ -13,11 +14,13 @@ export class PrestoClient {
   constructor({ catalog, host, interval, port, schema, source, timezone, user }: PrestoClientConfig) {
     this.baseUrl = `${host || 'http://localhost'}:${port || 8080}/v1/statement`
     this.catalog = catalog
-    this.interval = interval || 100
+    this.interval = interval
     this.schema = schema
     this.source = source
     this.timezone = timezone
     this.user = user
+
+    this.retryInterval = 500
 
     this.headers = {
       'X-Presto-Client-Info': 'presto-js-client',
@@ -91,11 +94,24 @@ export class PrestoClient {
     do {
       const response = await this.request({ method: 'GET', url: nextUri })
 
+      // Server is overloaded, wait a bit
+      if (response.status === 503) {
+        await this.delay(this.retryInterval)
+        continue
+      }
+
       if (response.status !== 200) {
         throw new Error(`Query failed: ${JSON.stringify(await response.text())}`)
       }
 
       const prestoResponse = (await response.json()) as PrestoResponse
+      if (!prestoResponse) {
+        throw new Error(`Query failed with an empty response from the server.`)
+      }
+
+      if (prestoResponse.error) {
+        throw new Error(prestoResponse.error.errorName)
+      }
 
       nextUri = prestoResponse?.nextUri
       queryId = prestoResponse?.id
@@ -108,7 +124,9 @@ export class PrestoClient {
         data.push(...prestoResponse.data)
       }
 
-      await this.delay()
+      if (this.interval) {
+        await this.delay(this.interval)
+      }
     } while (nextUri !== undefined)
 
     return {
@@ -118,8 +136,8 @@ export class PrestoClient {
     }
   }
 
-  private delay() {
-    return new Promise(resolve => setTimeout(resolve, this.interval))
+  private delay(milliseconds: number) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
   }
 }
 
