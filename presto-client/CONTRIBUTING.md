@@ -79,7 +79,9 @@ To publish a new version to NPM, follow these steps:
    git stash
    ```
 
-2. Publish a new version by running the following command:
+2. Create a new branch using the version generated in [Publishing Locally](#Locally) section above, like so: `release/1.x.y` (This is important since is not allowed to directly push to the `main` branch)
+
+3. Publish a new version by running the following command:
 
    ```bash
    npm run publish presto-client
@@ -93,7 +95,7 @@ To publish a new version to NPM, follow these steps:
 
    Check the [semver options](https://github.com/jscutlery/semver#available-options) for all available options.
 
-3. As part of the previous command, a draft GitHub release is also created. Go to [GitHub Releases](https://github.com/prestodb/presto-js-client/releases), review and edit it if necessary, and then click "Publish release" to make it public.
+4. As part of the previous command, a draft GitHub release is also created. Go to [GitHub Releases](https://github.com/prestodb/presto-js-client/releases), review and edit it if necessary, and then click "Publish release" to make it public.
 
    \*If you published the package as a Pre-release version, please also mark the GitHub release as a "Pre-release."
 
