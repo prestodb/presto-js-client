@@ -110,7 +110,8 @@ export class PrestoClient {
       }
 
       if (prestoResponse.error) {
-        throw new Error(prestoResponse.error.errorName)
+        // Throw back the whole error object which contains all error information
+        throw prestoResponse.error
       }
 
       nextUri = prestoResponse?.nextUri
