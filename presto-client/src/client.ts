@@ -111,7 +111,6 @@ export class PrestoClient {
       }
 
       if (prestoResponse.error) {
-        console.error(JSON.stringify(prestoResponse.error))
         throw new Error(prestoResponse.error.errorName)
       }
 
