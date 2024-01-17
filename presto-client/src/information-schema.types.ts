@@ -1,19 +1,19 @@
 export interface Table {
   tableCatalog: string
-  tableSchema: string
   tableName: string
+  tableSchema: string
   tableType: string
 }
 
 export interface Column {
-  tableCatalog: string
-  tableSchema: string
-  tableName: string
-  columnName: string
-  ordinalPosition: number
   columnDefault: unknown
-  isNullable: boolean
-  dataType: string
+  columnName: string
   comment: string
+  dataType: string
   extraInfo: unknown
+  isNullable: boolean
+  ordinalPosition: number
+  tableCatalog: string
+  tableName: string
+  tableSchema: string
 }
