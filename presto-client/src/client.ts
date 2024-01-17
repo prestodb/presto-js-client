@@ -240,6 +240,20 @@ export class PrestoClient {
     }
   }
 
+  private delay(milliseconds: number) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
+  }
+
+  // This builds a WHERE statement if one or more of the conditions contain non-undefined values
+  // Currently only works for string values (need more conditions for number and boolean)
+  private getWhereCondition(conditions: { key: string; value?: string }[]): string {
+    const filteredConditions = conditions.filter(({ value }) => Boolean(value))
+    if (filteredConditions.length) {
+      return `WHERE ${filteredConditions.map(({ key, value }) => `${key} = '${value}'`).join(' AND ')}`
+    }
+    return ''
+  }
+
   private request({
     body,
     headers,
@@ -256,20 +270,6 @@ export class PrestoClient {
       headers,
       method,
     })
-  }
-
-  private delay(milliseconds: number) {
-    return new Promise(resolve => setTimeout(resolve, milliseconds))
-  }
-
-  // This builds a WHERE statement if one or more of the conditions contain non-undefined values
-  // Currently only works for string values (need more conditions for number and boolean)
-  private getWhereCondition(conditions: { key: string; value?: string }[]): string {
-    const filteredConditions = conditions.filter(({ value }) => Boolean(value))
-    if (filteredConditions.length) {
-      return `WHERE ${filteredConditions.map(({ key, value }) => `${key} = '${value}'`).join(' AND ')}`
-    }
-    return ''
   }
 }
 
