@@ -37,7 +37,12 @@ export interface PrestoError {
   errorCode: number
   errorName: string
   errorType: string
-  failureInfo: unknown
+  failureInfo: {
+    message: string
+    stack: string[]
+    suppressed: string[]
+    type: string
+  }
   message: string
 }
 

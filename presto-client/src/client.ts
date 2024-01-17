@@ -54,6 +54,9 @@ export class PrestoClient {
     })
   }
 
+  /**
+   * @throws {PrestoError} If the underlying Presto engine returns an error
+   */
   async query(
     query: string,
     options?: {
