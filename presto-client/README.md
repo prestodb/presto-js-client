@@ -102,3 +102,68 @@ Additional notes
 - The `query` method is asynchronous and will return a promise that resolves to a PrestoQuery object.
 - The `query` method will automatically retry the query if it fails due to a transient error.
 - The `query` method will cancel the query if the client is destroyed.
+
+## Query catalog, schema, table and column metadata
+
+### Get Catalogs
+
+The `getCatalogs` method retrieves all available database catalogs, returning them as an array of strings.
+
+#### Example usage
+
+```typescript
+const catalogs = await prestoClient.getCatalogs()
+console.log(catalogs)
+```
+
+### Get Schemas
+
+The `getSchemas` method retrieves all schemas within a given catalog. It accepts a catalog parameter, which is a string representing the name of the catalog.
+
+Parameters
+
+- `catalog`: The name of the catalog for which to retrieve schemas.
+
+#### Example usage
+
+```typescript
+const schemas = await prestoClient.getSchemas('tpch')
+console.log(schemas)
+```
+
+### Get Tables
+
+The `getTables` method retrieves a list of tables filtered by the given catalog and, optionally, the schema. It accepts an object containing `catalog` and optional `schema` parameters.
+
+Parameters
+
+- `catalog`: The catalog name.
+- `schema` (optional): The schema name.
+
+#### Example usage
+
+```typescript
+const tables = await prestoClient.getTables({ catalog: 'tpch', schema: 'sf100' })
+console.log(tables)
+```
+
+### Get Columns
+
+The `getColumns` method retrieves a list of columns filtered for the given catalog and optional schema and table filters. It accepts an object with `catalog`, and optional `schema` and `table` parameters.
+
+Parameters
+
+- `catalog`: The catalog name.
+- `schema` (optional): The schema name.
+- `table` (optional): The table name.
+
+#### Example usage
+
+```typescript
+const columns = await prestoClient.getColumns({
+  catalog: 'tpch',
+  schema: 'sf100',
+  table: 'orders',
+})
+console.log(columns)
+```

@@ -3,6 +3,38 @@ import PrestoClient, { PrestoClientConfig } from '@prestodb/presto-js-client'
 
 @Injectable()
 export class AppService {
+  async getCatalogs(): Promise<string[] | undefined> {
+    const clientParams: PrestoClientConfig = {
+      catalog: 'tpch',
+      host: 'http://localhost',
+      port: 8080,
+      schema: 'sf1',
+      user: 'root',
+    }
+    const client = new PrestoClient(clientParams)
+    try {
+      return await client.getCatalogs()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async getSchemas(catalog: string): Promise<string[] | undefined> {
+    const clientParams: PrestoClientConfig = {
+      catalog: 'tpch',
+      host: 'http://localhost',
+      port: 8080,
+      schema: 'sf1',
+      user: 'root',
+    }
+    const client = new PrestoClient(clientParams)
+    try {
+      return await client.getSchemas(catalog)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   async getData(): Promise<unknown> {
     const clientParams: PrestoClientConfig = {
       catalog: 'tpch',
