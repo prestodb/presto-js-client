@@ -1,4 +1,4 @@
-import { PrestoClientConfig, PrestoQuery, PrestoResponse } from './client.types'
+import { PrestoClientConfig, PrestoError, PrestoQuery, PrestoResponse } from './client.types'
 
 export class PrestoClient {
   private baseUrl: string
@@ -114,7 +114,7 @@ export class PrestoClient {
 
       if (prestoResponse.error) {
         // Throw back the whole error object which contains all error information
-        throw prestoResponse.error
+        throw new PrestoError(prestoResponse.error)
       }
 
       nextUri = prestoResponse?.nextUri

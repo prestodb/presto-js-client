@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import PrestoClient, { PrestoClientConfig } from '@prestodb/presto-js-client'
+import PrestoClient, { PrestoClientConfig, PrestoError } from '@prestodb/presto-js-client'
 
 @Injectable()
 export class AppService {
@@ -18,9 +18,35 @@ export class AppService {
       )
       return { columns: results.columns, rows: results.data }
     } catch (error) {
-      return JSON.stringify({
-        error,
-      })
+      return (error as PrestoError).message
+    }
+  }
+
+  async getDataWithError(): Promise<unknown> {
+    const clientParams: PrestoClientConfig = {
+      catalog: 'tpch',
+      host: 'http://localhost',
+      port: 8080,
+      schema: 'sf1',
+      user: 'root',
+    }
+    const client = new PrestoClient(clientParams)
+    try {
+      const results = await client.query(`SELECT * FROM A SYNTAX ERROR`)
+      return { columns: results.columns, rows: results.data }
+    } catch (error) {
+      if (error instanceof PrestoError) {
+        /* eslint-disable no-console */
+        // The error here contains all the information returned by Presto directly
+        console.info(error.message)
+        console.info(error.name)
+        console.info(error.errorCode)
+        console.info(error.stack)
+        console.info(error.failureInfo.type)
+        return 'A Presto error ocurred, please check the service logs'
+      }
+      console.error(error)
+      return error
     }
   }
 }
