@@ -1,4 +1,5 @@
 import { PrestoClientConfig, PrestoQuery, PrestoResponse } from './client.types'
+import { Column, Table } from './information-schema.types'
 
 export class PrestoClient {
   private baseUrl: string
@@ -110,6 +111,7 @@ export class PrestoClient {
       }
 
       if (prestoResponse.error) {
+        console.error(JSON.stringify(prestoResponse.error))
         throw new Error(prestoResponse.error.errorName)
       }
 
@@ -136,8 +138,93 @@ export class PrestoClient {
     }
   }
 
+  async getCatalogs(): Promise<string[] | undefined> {
+    return (await this.query(`SHOW CATALOGS`)).data?.map(([catalog]) => catalog as string)
+  }
+
+  async getSchemas(catalog: string): Promise<string[] | undefined> {
+    return (
+      await this.query(`SHOW SCHEMAS`, {
+        catalog,
+      })
+    ).data?.map(([schema]) => schema as string)
+  }
+
+  async getTables({ catalog, schema }: { catalog: string; schema?: string }): Promise<Table[] | undefined> {
+    const whereCondition = this.getWhereCondition([{ key: 'table_schema', value: schema }])
+    // The order of the select expression columns is important since we destructure them in the same order below
+    const query = `SELECT table_catalog, table_schema, table_name, table_type FROM information_schema.tables ${whereCondition}`
+    const rawResult = (
+      await this.query(query, {
+        catalog,
+      })
+    ).data
+    // This destructuring names the fields properly for each row, and converts them to camelCase
+    return rawResult?.map(([tableCatalog, tableSchema, tableName, tableType]) => ({
+      tableCatalog,
+      tableSchema,
+      tableName,
+      tableType,
+    })) as Table[]
+  }
+
+  async getColumns({
+    catalog,
+    schema,
+    table,
+  }: {
+    catalog: string
+    schema?: string
+    table?: string
+  }): Promise<Column[] | undefined> {
+    const whereCondition = this.getWhereCondition([
+      { key: 'table_schema', value: schema },
+      { key: 'table_name', value: table },
+    ])
+
+    // The order of the select expression columns is important since we destructure them in the same order below
+    const query = `SELECT table_catalog, table_schema, table_name, column_name, column_default, is_nullable, data_type, comment, extra_info FROM information_schema.columns ${whereCondition}`
+    const rawResult = (
+      await this.query(query, {
+        catalog,
+      })
+    ).data
+    return rawResult?.map(
+      ([
+        // This destructuring names the fields properly for each row, and converts them to camelCase
+        tableCatalog,
+        tableSchema,
+        tableName,
+        columnName,
+        columnDefault,
+        isNullable,
+        dataType,
+        comment,
+        extraInfo,
+      ]) => ({
+        tableCatalog,
+        tableSchema,
+        tableName,
+        columnName,
+        columnDefault,
+        isNullable,
+        dataType,
+        comment,
+        extraInfo,
+      }),
+    ) as Column[]
+  }
+
   private delay(milliseconds: number) {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
+  }
+
+  private getWhereCondition(conditions: { key: string; value?: string }[]): string {
+    const filteredConditions = conditions.filter(({ value }) => Boolean(value))
+    if (filteredConditions.length) {
+      return `WHERE ${filteredConditions.map(({ key, value }) => `${key} = '${value}'`).join(' AND ')}`
+    }
+    return ''
   }
 }
 
