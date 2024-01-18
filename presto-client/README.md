@@ -64,12 +64,7 @@ If the query succeeds, the PrestoQuery object will have the following properties
 - `data`: An array of arrays that contain the actual data for the results.
 - `queryId`: The ID of the query.
 
-If the query fails, the PrestoQuery object will have the following properties:
-
-- `error`: An object that contains information about the error.
-- `queryId`: The ID of the query.
-
-You can use the `error` property to get more information about the error that occurred. You can also use the `queryId` property to cancel the query or to get more information about the status of the query.
+If the query fails, you can catch the error as a PrestoError which contains all information returned by Presto.
 
 ### Example usage
 
@@ -86,12 +81,14 @@ const client = new PrestoClient({
 
 const query = `SELECT * FROM my_table`
 
-const prestoQuery = await client.query(query)
-
-if (prestoQuery.error) {
-  // Handle the error.
-} else {
-  // Use the results of the query.
+try {
+  const prestoQuery = await client.query(query)
+  const results = prestoQuery.data
+} catch (error) {
+  if (error instanceof PrestoError) {
+    // Handle the error.
+    console.error(error.errorCode)
+  }
 }
 ```
 

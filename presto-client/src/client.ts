@@ -1,4 +1,4 @@
-import { PrestoClientConfig, PrestoQuery, PrestoResponse } from './client.types'
+import { PrestoClientConfig, PrestoError, PrestoQuery, PrestoResponse } from './client.types'
 import { Column, Table } from './information-schema.types'
 
 export class PrestoClient {
@@ -157,6 +157,7 @@ export class PrestoClient {
    * @param {string} [options.catalog] - The catalog to be used for the query. Optional.
    * @param {string} [options.schema] - The schema to be used for the query. Optional.
    * @returns {Promise<PrestoQuery>} A promise that resolves to the result of the query execution.
+   * @throws {PrestoError} If the underlying Presto engine returns an error
    */
   async query(
     query: string,
@@ -214,7 +215,8 @@ export class PrestoClient {
       }
 
       if (prestoResponse.error) {
-        throw new Error(prestoResponse.error.errorName)
+        // Throw back the whole error object which contains all error information
+        throw new PrestoError(prestoResponse.error)
       }
 
       nextUri = prestoResponse?.nextUri
