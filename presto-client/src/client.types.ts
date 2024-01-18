@@ -1,6 +1,6 @@
 export interface PrestoClientConfig {
   authorizationToken?: string
-  basicAuthorization?: {
+  basicAuthentication?: {
     user: string
     password: string
   }

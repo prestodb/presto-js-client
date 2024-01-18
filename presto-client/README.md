@@ -46,6 +46,9 @@ The Presto client can be configured with the following parameters:
 - `schema`: The default schema to use for queries. (Default: `undefined`)
 - `source`: The name of the source you want to use for reporting purposes (Default: `presto-js-client`)
 - `timezone`: The timezone to use for queries. (Default: `undefined`)
+- `authorizationToken`: The value to send as-is in the Authorization header. (Default: `undefined`)
+- `basicAuthentication`: An object with a user and password inside, to be used for basic authentication. (Default: `undefined`)
+- `extraHeaders`: An dictionary of key-values to send as extra headers in all requests to the API. (Default: `undefined`)
 - `interval`: (DEPRECATED) The interval in milliseconds between checks for the status of a running query. (Default: `100`)
 
 ## Querying

@@ -30,7 +30,7 @@ export class PrestoClient {
    * @param {string} config.user - The username to be used for the Presto session.
    */
   constructor({
-    basicAuthorization,
+    basicAuthentication,
     authorizationToken,
     catalog,
     extraHeaders,
@@ -65,10 +65,10 @@ export class PrestoClient {
 
     if (authorizationToken) {
       this.headers['Authorization'] = authorizationToken
-    } else if (basicAuthorization) {
+    } else if (basicAuthentication) {
       // Note this is only available for Node.js
       this.headers['Authorization'] = `Bearer ${Buffer.from(
-        `${basicAuthorization.user}:${basicAuthorization.password}`,
+        `${basicAuthentication.user}:${basicAuthentication.password}`,
       ).toString('base64')}`
     }
 
