@@ -14,4 +14,13 @@ export class AppController {
       console.error(err)
     }
   }
+
+  @Get('presto-error')
+  async getDataWithError() {
+    try {
+      return await this.appService.getDataWithError()
+    } catch (err) {
+      console.error(err)
+    }
+  }
 }

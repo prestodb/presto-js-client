@@ -21,3 +21,5 @@ npm-debug.log
 .DS_Store
 Thumbs.db
 
+# Nx files
+.nx
