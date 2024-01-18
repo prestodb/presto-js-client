@@ -130,7 +130,7 @@ console.log(schemas)
 
 ### Get Tables
 
-The `getTables` method retrieves a list of tables filtered by the given catalog and, optionally, the schema. It accepts an object containing `catalog` and optional `schema` parameters.
+The `getTables` method retrieves a list of tables (of type `Table`) filtered by the given catalog and, optionally, the schema. It accepts an object containing `catalog` and optional `schema` parameters.
 
 Parameters
 
@@ -140,13 +140,13 @@ Parameters
 #### Example usage
 
 ```typescript
-const tables = await prestoClient.getTables({ catalog: 'tpch', schema: 'sf100' })
+const tables: Table[] = await prestoClient.getTables({ catalog: 'tpch', schema: 'sf100' })
 console.log(tables)
 ```
 
 ### Get Columns
 
-The `getColumns` method retrieves a list of columns filtered for the given catalog and optional schema and table filters. It accepts an object with `catalog`, and optional `schema` and `table` parameters.
+The `getColumns` method retrieves a list of columns (of type `Column`) filtered for the given catalog and optional schema and table filters. It accepts an object with `catalog`, and optional `schema` and `table` parameters.
 
 Parameters
 
@@ -157,7 +157,7 @@ Parameters
 #### Example usage
 
 ```typescript
-const columns = await prestoClient.getColumns({
+const columns: Column[] = await prestoClient.getColumns({
   catalog: 'tpch',
   schema: 'sf100',
   table: 'orders',
