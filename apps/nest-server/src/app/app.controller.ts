@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common'
+import { Controller, Get, Query } from '@nestjs/common'
 
 import { AppService } from './app.service'
 
@@ -7,7 +7,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get('get-schemas')
-  async getSchemas(@Param('catalog') catalog: string) {
+  async getSchemas(@Query('catalog') catalog: string) {
     try {
       return await this.appService.getSchemas(catalog)
     } catch (err) {
@@ -28,6 +28,15 @@ export class AppController {
   async getData() {
     try {
       return await this.appService.getData()
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  @Get('get-query-info')
+  async getQueryInfo(@Query('queryId') queryId: string) {
+    try {
+      return await this.appService.getQueryInfo(queryId)
     } catch (err) {
       console.error(err)
     }

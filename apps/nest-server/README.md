@@ -1,6 +1,6 @@
 # NestJS Application
 
-This application was generated using [Nx](https://nx.dev).
+This is an example application to showcase how to use the Presto JS Client. Look at the app service file (src/app/app.service.ts) to see how to use the client for several different operations, and how to handle the results as well as the errors.
 
 ## Running the Application
 

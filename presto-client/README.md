@@ -100,6 +100,23 @@ Additional notes
 - The `query` method will automatically retry the query if it fails due to a transient error.
 - The `query` method will cancel the query if the client is destroyed.
 
+## Get Query metadata information
+
+### Get Query Information
+
+The `getQueryInfo` method retrieves comprehensive information about a specific query, based on its identifier. It returns metadata including status, execution details, statistics, and more, encapsulated within a `QueryInfo` object or undefined if the query does not exist.
+
+#### Parameters
+
+- `queryId`: The unique identifier string of the query for which information is being retrieved.
+
+#### Example usage
+
+````typescript
+const queryInfo = await prestoClient.getQueryInfo('your_query_id');
+console.log(queryInfo);
+```
+
 ## Query catalog, schema, table and column metadata
 
 ### Get Catalogs
@@ -111,7 +128,7 @@ The `getCatalogs` method retrieves all available database catalogs, returning th
 ```typescript
 const catalogs = await prestoClient.getCatalogs()
 console.log(catalogs)
-```
+````
 
 ### Get Schemas
 
