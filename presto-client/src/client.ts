@@ -1,5 +1,13 @@
-import { PrestoClientConfig, PrestoError, PrestoQuery, PrestoResponse } from './client.types'
-import { Column, Table } from './information-schema.types'
+import { QUERY_INFO_URL, STATEMENT_URL } from './constants'
+import {
+  Column,
+  PrestoClientConfig,
+  PrestoError,
+  PrestoQuery,
+  PrestoResponse,
+  QueryInfo,
+  Table,
+} from './types'
 
 export class PrestoClient {
   private baseUrl: string
@@ -25,7 +33,7 @@ export class PrestoClient {
    * @param {string} config.user - The username to be used for the Presto session.
    */
   constructor({ catalog, host, interval, port, schema, source, timezone, user }: PrestoClientConfig) {
-    this.baseUrl = `${host || 'http://localhost'}:${port || 8080}/v1/statement`
+    this.baseUrl = `${host || 'http://localhost'}:${port || 8080}`
     this.catalog = catalog
     this.interval = interval
     this.schema = schema
@@ -113,6 +121,25 @@ export class PrestoClient {
   }
 
   /**
+   * Retrieves all the information for a given query
+   * @param {string} queryId The query identifier string
+   * @returns {Promise<QueryInfo | undefined>} All the query information
+   */
+  async getQueryInfo(queryId: string): Promise<QueryInfo | undefined> {
+    const queryInfoResponse = await this.request({
+      headers: this.headers,
+      method: 'GET',
+      url: `${this.baseUrl}${QUERY_INFO_URL}${queryId}`,
+    })
+
+    if (queryInfoResponse.status !== 200) {
+      throw new Error(`Query failed: ${JSON.stringify(await queryInfoResponse.text())}`)
+    }
+
+    return (await queryInfoResponse.json()) as QueryInfo
+  }
+
+  /**
    * Retrieves all schemas within a given catalog.
    * @param {string} catalog - The name of the catalog for which to retrieve schemas.
    * @returns {Promise<string[] | undefined>} An array of schema names within the specified catalog.
@@ -180,7 +207,12 @@ export class PrestoClient {
       headers['X-Presto-Schema'] = schema
     }
 
-    const firstResponse = await this.request({ body: query, headers, method: 'POST', url: this.baseUrl })
+    const firstResponse = await this.request({
+      body: query,
+      headers,
+      method: 'POST',
+      url: `${this.baseUrl}${STATEMENT_URL}`,
+    })
 
     if (firstResponse.status !== 200) {
       throw new Error(`Query failed: ${JSON.stringify(await firstResponse.text())}`)
