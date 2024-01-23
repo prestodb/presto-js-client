@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import PrestoClient, { PrestoClientConfig, PrestoError } from '@prestodb/presto-js-client'
+import PrestoClient, { PrestoClientConfig, PrestoError, QueryInfo } from '@prestodb/presto-js-client'
 
 @Injectable()
 export class AppService {
@@ -51,6 +51,20 @@ export class AppService {
       return { columns: results.columns, rows: results.data }
     } catch (error) {
       return (error as PrestoError).message
+    }
+  }
+
+  async getQueryInfo(queryId: string): Promise<QueryInfo | undefined> {
+    const clientParams: PrestoClientConfig = {
+      host: 'http://localhost',
+      port: 8080,
+      user: 'root',
+    }
+    const client = new PrestoClient(clientParams)
+    try {
+      return await client.getQueryInfo(queryId)
+    } catch (error) {
+      console.error(error.message)
     }
   }
 

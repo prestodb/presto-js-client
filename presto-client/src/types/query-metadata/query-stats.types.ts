@@ -1,0 +1,61 @@
+import { RuntimeStats } from './runtime-stats.types'
+import { OperatorStats, StageGcStatistics } from './stage.types'
+
+export interface QueryStats {
+  createTime: string
+  executionStartTime: string
+  lastHeartbeat: string
+  endTime: string
+  elapsedTime: string
+  waitingForPrerequisitesTime: string
+  queuedTime: string
+  resourceWaitingTime: string
+  semanticAnalyzingTime: string
+  columnAccessPermissionCheckingTime: string
+  dispatchingTime: string
+  executionTime: string
+  analysisTime: string
+  totalPlanningTime: string
+  finishingTime: string
+  totalTasks: number
+  runningTasks: number
+  peakRunningTasks: number
+  completedTasks: number
+  totalDrivers: number
+  queuedDrivers: number
+  runningDrivers: number
+  blockedDrivers: number
+  completedDrivers: number
+  cumulativeUserMemory: number
+  cumulativeTotalMemory: number
+  userMemoryReservation: string
+  totalMemoryReservation: string
+  peakUserMemoryReservation: string
+  peakTotalMemoryReservation: string
+  peakTaskTotalMemory: string
+  peakTaskUserMemory: string
+  peakNodeTotalMemory: string
+  scheduled: boolean
+  totalScheduledTime: string
+  totalCpuTime: string
+  retriedCpuTime: string
+  totalBlockedTime: string
+  fullyBlocked: boolean
+  blockedReasons: Set<string>
+  totalAllocation: string
+  rawInputDataSize: string
+  rawInputPositions: number
+  processedInputDataSize: string
+  processedInputPositions: number
+  shuffledDataSize: string
+  shuffledPositions: number
+  outputDataSize: string
+  outputPositions: number
+  writtenOutputPositions: number
+  writtenOutputLogicalDataSize: string
+  writtenOutputPhysicalDataSize: string
+  writtenIntermediatePhysicalDataSize: string
+  stageGcStatistics: StageGcStatistics[]
+  operatorSummaries: OperatorStats[]
+  runtimeStats: RuntimeStats
+}
