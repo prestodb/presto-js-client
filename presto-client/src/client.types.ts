@@ -1,5 +1,11 @@
 export interface PrestoClientConfig {
+  authorizationToken?: string
+  basicAuthentication?: {
+    user: string
+    password: string
+  }
   catalog?: string
+  extraHeaders?: Record<string, string>
   host?: string
   interval?: number
   port?: number
