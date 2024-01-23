@@ -112,9 +112,9 @@ The `getQueryInfo` method retrieves comprehensive information about a specific q
 
 #### Example usage
 
-````typescript
-const queryInfo = await prestoClient.getQueryInfo('your_query_id');
-console.log(queryInfo);
+```typescript
+const queryInfo = await prestoClient.getQueryInfo('your_query_id')
+console.log(queryInfo)
 ```
 
 ## Query catalog, schema, table and column metadata
@@ -128,7 +128,7 @@ The `getCatalogs` method retrieves all available database catalogs, returning th
 ```typescript
 const catalogs = await prestoClient.getCatalogs()
 console.log(catalogs)
-````
+```
 
 ### Get Schemas
 
