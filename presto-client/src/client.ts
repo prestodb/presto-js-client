@@ -23,7 +23,12 @@ export class PrestoClient {
   /**
    * Creates an instance of PrestoClient.
    * @param {PrestoClientConfig} config - Configuration object for the PrestoClient.
+   * @param {Object} config.basicAuthorization - Optional object for basic authorization.
+   * @param {Object} config.basicAuthorization.user - The basic auth user name.
+   * @param {Object} config.basicAuthorization.password - The basic auth password.
+   * @param {string} config.authorizationToken - An optional token to be sent in the authorization header. Takes precedence over the basic auth.
    * @param {string} config.catalog - The default catalog to be used.
+   * @param {Record<string, string>} config.extraHeaders - Any extra headers to include in the API requests. Optional.
    * @param {string} config.host - The host address of the Presto server.
    * @param {number} config.interval - The polling interval in milliseconds for query status checks.
    * @param {number} config.port - The port number on which the Presto server is listening.
@@ -32,7 +37,19 @@ export class PrestoClient {
    * @param {string} [config.timezone] - The timezone to be used for the session. Optional.
    * @param {string} config.user - The username to be used for the Presto session.
    */
-  constructor({ catalog, host, interval, port, schema, source, timezone, user }: PrestoClientConfig) {
+  constructor({
+    basicAuthentication,
+    authorizationToken,
+    catalog,
+    extraHeaders,
+    host,
+    interval,
+    port,
+    schema,
+    source,
+    timezone,
+    user,
+  }: PrestoClientConfig) {
     this.baseUrl = `${host || 'http://localhost'}:${port || 8080}`
     this.catalog = catalog
     this.interval = interval
@@ -54,7 +71,19 @@ export class PrestoClient {
       this.headers['X-Presto-Time-Zone'] = this.timezone
     }
 
-    // TODO: Set up auth
+    if (authorizationToken) {
+      this.headers['Authorization'] = `Bearer ${authorizationToken}`
+    } else if (basicAuthentication) {
+      // Note this is only available for Node.js
+      this.headers['Authorization'] = `Basic ${Buffer.from(
+        `${basicAuthentication.user}:${basicAuthentication.password}`,
+      ).toString('base64')}`
+    }
+
+    this.headers = {
+      ...extraHeaders,
+      ...this.headers,
+    }
   }
 
   /**
@@ -229,7 +258,7 @@ export class PrestoClient {
     const data = []
 
     do {
-      const response = await this.request({ method: 'GET', url: nextUri })
+      const response = await this.request({ headers, method: 'GET', url: nextUri })
 
       // Server is overloaded, wait a bit
       if (response.status === 503) {
