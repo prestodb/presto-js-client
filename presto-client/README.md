@@ -46,7 +46,7 @@ The Presto client can be configured with the following parameters:
 - `schema`: The default schema to use for queries. (Default: `undefined`)
 - `source`: The name of the source you want to use for reporting purposes (Default: `presto-js-client`)
 - `timezone`: The timezone to use for queries. (Default: `undefined`)
-- `authorizationToken`: The value to send as-is in the Authorization header. (Default: `undefined`)
+- `authorizationToken`: The value to send as-is in the Authorization header. _Note_: The `Bearer` scheme is automatically added. (Default: `undefined`)
 - `basicAuthentication`: An object with a user and password inside, to be used for basic authentication. (Default: `undefined`)
 - `extraHeaders`: An dictionary of key-values to send as extra headers in all requests to the API. (Default: `undefined`)
 - `interval`: (DEPRECATED) The interval in milliseconds between checks for the status of a running query. (Default: `100`)
@@ -166,4 +166,60 @@ const columns: Column[] = await prestoClient.getColumns({
   table: 'orders',
 })
 console.log(columns)
+```
+
+## Authentication
+
+When creating the client instance, you optionally pass one of two authentication methods.
+
+### Basic authentication
+
+You can send a basic authorization user and password in this way:
+
+```typescript
+const client = new PrestoClient({
+  basicAuthentication: {
+    user: 'my-user',
+    password: 'my-password',
+  },
+  catalog: 'tpcds',
+  host: 'http://localhost',
+  port: 8080,
+  schema: 'sf1',
+  user: 'root',
+})
+```
+
+### Auth token
+
+You can send an authorization token in the following way:
+
+```typescript
+const client = new PrestoClient({
+  // Do not include `Bearer` here, it is automatically added by the client
+  authorizationToken: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c`,
+  catalog: 'tpcds',
+  host: 'http://localhost',
+  port: 8080,
+  schema: 'sf1',
+  user: 'root',
+})
+```
+
+## Extra headers
+
+You can pass any extra custom headers to the Presto client to be send on all requests performed against the host:
+
+```typescript
+const client = new PrestoClient({
+  catalog: 'tpcds',
+  extraHeaders: {
+    'X-My-Custom-Header-1': 'value',
+    'X-My-Custom-Header-2': 'value',
+  },
+  host: 'http://localhost',
+  port: 8080,
+  schema: 'sf1',
+  user: 'root',
+})
 ```

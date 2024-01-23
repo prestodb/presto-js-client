@@ -64,7 +64,7 @@ export class PrestoClient {
     }
 
     if (authorizationToken) {
-      this.headers['Authorization'] = authorizationToken
+      this.headers['Authorization'] = `Bearer ${authorizationToken}`
     } else if (basicAuthentication) {
       // Note this is only available for Node.js
       this.headers['Authorization'] = `Basic ${Buffer.from(
