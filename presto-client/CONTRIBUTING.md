@@ -68,7 +68,7 @@ To publish a new version to NPM, follow these steps:
 
 #### Pre-requisites
 
-- Have a valid `NPM_TOKEN` with write permissions to [prestodb NPM organization](https://www.npmjs.com/settings/prestodb/packages).
+- Have a valid `NPM_TOKEN` with write permissions to [prestodb NPM organization](https://www.npmjs.com/settings/prestodb/packages) and log-in to NPM using that token by running `npm adduser`.
 - Install [GitHub CLI](https://cli.github.com/) on your machine.
 
 #### Steps
@@ -98,43 +98,3 @@ To publish a new version to NPM, follow these steps:
 4. As part of the previous command, a draft GitHub release is also created. Go to [GitHub Releases](https://github.com/prestodb/presto-js-client/releases), review and edit it if necessary, and then click "Publish release" to make it public.
 
    \*If you published the package as a Pre-release version, please also mark the GitHub release as a "Pre-release."
-
-## Testing
-
-To test the library using [Jest](https://jestjs.io), run the following command:
-
-```bash
-npm run test presto-client
-```
-
-## Sample apps
-
-You can run the sample apps to check the client still works properly.
-
-### NestJS Server
-
-Run the server with
-
-```sh
-npx nx serve nest-server
-```
-
-Check the server is live and you can make queries on this URL:
-
-```
-http://localhost:3000/api/query-test
-```
-
-### NextJS Server Side Rendered app
-
-Run the application with
-
-```sh
-npx nx serve nextjs
-```
-
-Check the app is running on your browser:
-
-```
-http://localhost:4200/
-```
