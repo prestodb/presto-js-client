@@ -68,7 +68,7 @@ To publish a new version to NPM, follow these steps:
 
 #### Pre-requisites
 
-- Have a valid `NPM_TOKEN` with write permissions to [prestodb NPM organization](https://www.npmjs.com/settings/prestodb/packages).
+- Have a valid `NPM_TOKEN` with write permissions to [prestodb NPM organization](https://www.npmjs.com/settings/prestodb/packages) and log-in to NPM using that token by running `npm adduser`.
 - Install [GitHub CLI](https://cli.github.com/) on your machine.
 
 #### Steps
