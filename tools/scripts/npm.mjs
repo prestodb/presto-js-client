@@ -52,4 +52,4 @@ invariant(
 process.chdir(outputPath)
 
 // Execute "npm publish" to publish
-execSync(`npm publish --access public --tag ${tag}`)
+execSync(`npm publish --access public`)
