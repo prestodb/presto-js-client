@@ -3,6 +3,6 @@ version: '3.8'
 services:
   presto:
     container_name: prestodb
-    image: ahanaio/prestodb-sandbox
+    image: prestodb/presto
     ports:
       - '8080:8080'
