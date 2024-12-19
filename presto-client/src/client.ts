@@ -10,7 +10,17 @@ import {
 } from './types'
 
 function digitsToBigInt(_: string, value: unknown, { source }: { source: string }) {
-  return /^\d+$/.test(source) ? BigInt(source) : value
+  // Ignore non-numbers
+  if (typeof value !== 'number') return value
+
+  // If not an integer, use the value
+  // TODO: Check if Presto can return floats that could also lose precision
+  if (!Number.isInteger(value)) return value
+
+  // If number is a safe integer, we can use it
+  if (Number.isSafeInteger(value)) return value
+
+  return BigInt(source)
 }
 
 export class PrestoClient {
