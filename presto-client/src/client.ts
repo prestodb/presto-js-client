@@ -8,20 +8,7 @@ import {
   QueryInfo,
   Table,
 } from './types'
-
-function digitsToBigInt(_: string, value: unknown, { source }: { source: string }) {
-  // Ignore non-numbers
-  if (typeof value !== 'number') return value
-
-  // If not an integer, use the value
-  // TODO: Check if Presto can return floats that could also lose precision
-  if (!Number.isInteger(value)) return value
-
-  // If number is a safe integer, we can use it
-  if (Number.isSafeInteger(value)) return value
-
-  return BigInt(source)
-}
+import { parseWithBigInts, isJsonParseContextAvailable } from './utils'
 
 export class PrestoClient {
   private baseUrl: string
@@ -351,9 +338,13 @@ export class PrestoClient {
 
   private async prestoConversionToJSON({ response }: { response: Response }): Promise<unknown> {
     const text = await response.text()
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore JSON.parse with a 3 argument reviver is a stage 3 proposal with some support, allow it here.
-    return JSON.parse(text, digitsToBigInt)
+    if (isJsonParseContextAvailable()) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore JSON.parse with a 3 argument reviver is a stage 3 proposal with some support, allow it here.
+      return JSON.parse(text, parseWithBigInts)
+    } else {
+      return JSON.parse(text)
+    }
   }
 }
 
