@@ -11,12 +11,10 @@
  * @returns Parsed object with BigInts where required
  */
 export function parseWithBigInts(_: string, value: unknown, context: { source: string }) {
-  if (!context) return value // Context is not available, fallback to default parse
-  const { source } = context
-  if (!source) return value // Source is not available, fallback to default parse
+  if (!context?.source) return value // Context source is not available, fallback to default parse
 
   // Ignore non-numbers
-  if (typeof value !== 'number') return value
+  if (typeof value != 'number') return value
 
   // If not an integer, use the value
   // TODO: Check if Presto can return floats that could also lose precision
@@ -25,5 +23,5 @@ export function parseWithBigInts(_: string, value: unknown, context: { source: s
   // If number is a safe integer, we can use it
   if (Number.isSafeInteger(value)) return value
 
-  return BigInt(source)
+  return BigInt(context.source)
 }

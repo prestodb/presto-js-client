@@ -51,7 +51,7 @@ export class AppService {
       return {
         columns: results.columns,
         rows: JSON.stringify(results.data, (key, value) => {
-          if (typeof value !== 'bigint') return value
+          if (typeof value != 'bigint') return value
 
           return value.toString()
         }),
