@@ -10,7 +10,7 @@
  * @param context Context with source text
  * @returns Parsed object with BigInts where required
  */
-export function parseWithBigInts(_: string, value: unknown, context: { source: string }) {
+export function parseWithBigInts(_: string, value: unknown, context: { source: string } | undefined) {
   if (!context?.source) return value // Context source is not available, fallback to default parse
 
   // Ignore non-numbers
