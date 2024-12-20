@@ -97,11 +97,18 @@ try {
 
 ### Additional notes
 
-Additional notes
+Additional notes on the `query` method:
 
-- The `query` method is asynchronous and will return a promise that resolves to a PrestoQuery object.
-- The `query` method will automatically retry the query if it fails due to a transient error.
-- The `query` method will cancel the query if the client is destroyed.
+- It's asynchronous and will return a promise that resolves to a PrestoQuery object.
+- It will automatically retry the query if it fails due to a transient error.
+- It will cancel the query if the client is destroyed.
+- \*It parses big numbers with the BigInt JavaScript primitive. If your Presto response includes a number bigger than `Number.MAX_SAFE_INTEGER`, it will be parsed into a bigint, so you may need to consider that when handling the response, or serializing it.
+
+\* Only if the current JavaScript environment supports the reviver with context in the JSON.parse callback. Check compatibility here:
+
+- https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse#browser_compatibility
+
+Otherwise, bigger numbers will lose precision due to the default JavaScript JSON parsing.
 
 ## Get Query metadata information
 
@@ -240,3 +247,38 @@ const client = new PrestoClient({
   user: 'root',
 })
 ```
+
+## Troubleshooting
+
+### Do not know how to serialize a BigInt
+
+Example error message:
+
+```
+Do not know how to serialize a BigInt
+TypeError: Do not know how to serialize a BigInt
+  at JSON.stringify (<anonymous>)
+```
+
+Make sure to write a custom replacer and handle the serialization of BigInts if your Presto query returns a number bigger than `Number.MAX_SAFE_INTEGER`.
+Example JSON.stringify replacer:
+
+```javascript
+const results = await client.query(`SELECT 1234567890123456623`)
+return {
+  columns: results.columns,
+  rows: JSON.stringify(results.data, (key, value) => {
+    if (typeof value !== 'bigint') return value
+
+    return value.toString()
+  }),
+}
+```
+
+### Numbers lose precision
+
+Known issue:
+If working with numbers bigger than `Number.MAX_SAFE_INTEGER`, and your environment does not support the `JSON.parse` with the context in the reviver (Node.js > 21.0.0, and certain browser versions), the default JSON.parse will make the number lose precision.
+Check compatibility here:
+
+- https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse#browser_compatibility
