@@ -1,11 +1,20 @@
 /**
  * Parses a JSON including bigger numbers into BigInts
+ * This function checks if JSON.parse reviver callback has a context parameter
+ * and falls back onto the default parsing if not.
+ * See also:
+ * - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse#browser_compatibility
+ * - https://github.com/tc39/proposal-json-parse-with-source
  * @param _ Key
  * @param value Parsed value
  * @param context Context with source text
  * @returns Parsed object with BigInts where required
  */
-export function parseWithBigInts(_: string, value: unknown, { source }: { source: string }) {
+export function parseWithBigInts(_: string, value: unknown, context: { source: string }) {
+  if (!context) return value // Context is not available, fallback to default parse
+  const { source } = context
+  if (!source) return value // Source is not available, fallback to default parse
+
   // Ignore non-numbers
   if (typeof value !== 'number') return value
 
@@ -17,23 +26,4 @@ export function parseWithBigInts(_: string, value: unknown, { source }: { source
   if (Number.isSafeInteger(value)) return value
 
   return BigInt(source)
-}
-
-/**
- * Checks if JSON.parse reviver callback has a context parameter
- * See also:
- * - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse#browser_compatibility
- * - https://github.com/tc39/proposal-json-parse-with-source
- *
- * This implementation is based on suggestion here:
- * - https://github.com/tc39/proposal-json-parse-with-source/issues/40
- */
-export function isJsonParseContextAvailable() {
-  let contextAvailable
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  JSON.parse('"x"', function (key, value, x) {
-    contextAvailable = typeof x !== 'undefined'
-  })
-  return contextAvailable
 }

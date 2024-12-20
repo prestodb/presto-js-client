@@ -8,7 +8,7 @@ import {
   QueryInfo,
   Table,
 } from './types'
-import { parseWithBigInts, isJsonParseContextAvailable } from './utils'
+import { parseWithBigInts } from './utils'
 
 export class PrestoClient {
   private baseUrl: string
@@ -338,13 +338,9 @@ export class PrestoClient {
 
   private async prestoConversionToJSON({ response }: { response: Response }): Promise<unknown> {
     const text = await response.text()
-    if (isJsonParseContextAvailable()) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore JSON.parse with a 3 argument reviver is a stage 3 proposal with some support, allow it here.
-      return JSON.parse(text, parseWithBigInts)
-    } else {
-      return JSON.parse(text)
-    }
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore JSON.parse with a 3 argument reviver is a stage 3 proposal with some support, allow it here.
+    return JSON.parse(text, parseWithBigInts)
   }
 }
 
