@@ -8,6 +8,7 @@ import {
   QueryInfo,
   Table,
 } from './types'
+import { parseWithBigInts } from './utils'
 
 export class PrestoClient {
   private baseUrl: string
@@ -270,7 +271,7 @@ export class PrestoClient {
         throw new Error(`Query failed: ${JSON.stringify(await response.text())}`)
       }
 
-      const prestoResponse = (await response.json()) as PrestoResponse
+      const prestoResponse = (await this.prestoConversionToJSON({ response })) as PrestoResponse
       if (!prestoResponse) {
         throw new Error(`Query failed with an empty response from the server.`)
       }
@@ -333,6 +334,13 @@ export class PrestoClient {
       headers,
       method,
     })
+  }
+
+  private async prestoConversionToJSON({ response }: { response: Response }): Promise<unknown> {
+    const text = await response.text()
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore JSON.parse with a 3 argument reviver is a stage 3 proposal with some support, allow it here.
+    return JSON.parse(text, parseWithBigInts)
   }
 }
 
