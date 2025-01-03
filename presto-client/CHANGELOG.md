@@ -7,7 +7,7 @@ This file was generated using [@jscutlery/semver](https://github.com/jscutlery/s
 
 ### Bug Fixes
 
-* **client:** parse Presto JSON response with custom reviver and BigInts ([#25](https://github.com/prestodb/presto-js-client/issues/25)) ([e70df0d](https://github.com/prestodb/presto-js-client/commit/e70df0dd5d484bc7aefe44931434a188f976645b))
+* **presto-client:** parse Presto JSON response with custom reviver and BigInts ([#25](https://github.com/prestodb/presto-js-client/issues/25)) ([e70df0d](https://github.com/prestodb/presto-js-client/commit/e70df0dd5d484bc7aefe44931434a188f976645b))
 
 ## [1.0.0](https://github.com/prestodb/presto-js-client/compare/presto-client-0.1.1...presto-client-1.0.0) (2024-01-24)
 
