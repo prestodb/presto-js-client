@@ -37,7 +37,7 @@ export interface PrestoResponse {
   error: PrestoError
   id: string
   stats: PrestoStats
-  nextUri: string
+  nextUri: string | undefined
   updateType: string
 }
 

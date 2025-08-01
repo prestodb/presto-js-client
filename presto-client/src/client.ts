@@ -208,34 +208,36 @@ export class PrestoClient {
   }
 
   /**
-   * Executes a given query with optional catalog and schema settings.
+   * Generates a stream of query results in two parts: the query ID and the query result.
    * @param {string} query - The SQL query string to be executed.
    * @param {Object} [options] - Optional parameters for the query.
    * @param {string} [options.catalog] - The catalog to be used for the query. Optional.
    * @param {string} [options.schema] - The schema to be used for the query. Optional.
-   * @returns {Promise<PrestoQuery>} A promise that resolves to the result of the query execution.
-   * @throws {PrestoError} If the underlying Presto engine returns an error
+   * @returns {AsyncGenerator<PrestoQuery>} A generator that yields the query ID and the query result.
    */
-  async query(
+  async *queryGenerator(query: string, options?: { catalog?: string; schema?: string }) {
+    const prestoResp = await this.queryFirst(query, options)
+    yield prestoResp.id
+    yield await this.queryResult(prestoResp, options)
+  }
+
+  /**
+   * Retrieves the first query response from the Presto server.
+   * @param {string} query - The SQL query string to be executed.
+   * @param {Object} [options] - Optional parameters for the query.
+   * @param {string} [options.catalog] - The catalog to be used for the query. Optional.
+   * @param {string} [options.schema] - The schema to be used for the query. Optional.
+   * @returns {Promise<PrestoResponse>} A promise that resolves to the result of the query execution
+   * @throws {PrestoError} If the underlying Presto engine returns an error or a response is empty
+   */
+  private async queryFirst(
     query: string,
     options?: {
       catalog?: string
       schema?: string
     },
-  ): Promise<PrestoQuery> {
-    const catalog = options?.catalog || this.catalog
-    const schema = options?.schema || this.schema
-
-    const headers = {
-      ...this.headers,
-    }
-
-    if (catalog) {
-      headers['X-Presto-Catalog'] = catalog
-    }
-    if (schema) {
-      headers['X-Presto-Schema'] = schema
-    }
+  ): Promise<PrestoResponse> {
+    const headers = this.getHeaders(options)
 
     const firstResponse = await this.request({
       body: query,
@@ -248,15 +250,34 @@ export class PrestoClient {
       throw new Error(`Query failed: ${JSON.stringify(await firstResponse.text())}`)
     }
 
-    let nextUri = ((await firstResponse?.json()) as PrestoResponse)?.nextUri
+    return (await firstResponse?.json()) as PrestoResponse
+  }
 
-    if (!nextUri) {
-      throw new Error(`Didn't receive the first nextUri`)
-    }
-
+  /**
+   * Retrieves the query result from the Presto server.
+   * @param {PrestoResponse} prestoResp - A Presto response object from making the initial request (queryFirst).
+   * @param {Object} [options] - Optional parameters for the query.
+   * @param {string} [options.catalog] - The catalog to be used for the query. Optional.
+   * @param {string} [options.schema] - The schema to be used for the query. Optional.
+   * @returns {Promise<PrestoQuery>} A promise that resolves to the result of the query execution
+   * @throws {PrestoError} If the underlying Presto engine returns an error or a response is empty
+   */
+  private async queryResult(
+    prestoResp: PrestoResponse,
+    options?: {
+      catalog?: string
+      schema?: string
+    },
+  ): Promise<PrestoQuery> {
+    const headers = this.getHeaders(options)
+    let nextUri = prestoResp.nextUri
     let queryId: string | undefined = undefined
     const columns = []
     const data = []
+
+    if (!nextUri) {
+      throw new Error(`nextUri not provided in the presto response`)
+    }
 
     do {
       const response = await this.request({ headers, method: 'GET', url: nextUri })
@@ -302,6 +323,54 @@ export class PrestoClient {
       data,
       queryId,
     }
+  }
+
+  /**
+   * Builds the headers for the request.
+   * @param {Object} options - Optional parameters for the query.
+   * @param {string} [options.catalog] - The catalog to be used for the query. Optional.
+   * @param {string} [options.schema] - The schema to be used for the query. Optional.
+   * @returns {Record<string, string>} The headers for the request.
+   */
+  getHeaders(options?: { catalog?: string; schema?: string }): Record<string, string> {
+    const catalog = options?.catalog || this.catalog
+    const schema = options?.schema || this.schema
+
+    const headers = {
+      ...this.headers,
+    }
+
+    if (catalog) {
+      headers['X-Presto-Catalog'] = catalog
+    }
+    if (schema) {
+      headers['X-Presto-Schema'] = schema
+    }
+    return headers
+  }
+
+  /**
+   * Executes a given query with optional catalog and schema settings.
+   * @param {string} query - The SQL query string to be executed.
+   * @param {Object} [options] - Optional parameters for the query.
+   * @param {string} [options.catalog] - The catalog to be used for the query. Optional.
+   * @param {string} [options.schema] - The schema to be used for the query. Optional.
+   * @returns {Promise<PrestoQuery>} A promise that resolves to the result of the query execution.
+   * @throws {PrestoError} If the underlying Presto engine returns an error
+   */
+  async query(
+    query: string,
+    options?: {
+      catalog?: string
+      schema?: string
+    },
+  ): Promise<PrestoQuery> {
+    const prestoResp = await this.queryFirst(query, options)
+
+    if (!prestoResp?.nextUri) {
+      throw new Error(`Didn't receive the first nextUri`)
+    }
+    return await this.queryResult(prestoResp, options)
   }
 
   private delay(milliseconds: number) {
