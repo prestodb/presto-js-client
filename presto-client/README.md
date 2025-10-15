@@ -99,7 +99,7 @@ try {
 
 Additional notes on the `query` method:
 
-- It's asynchronous and will return a promise that resolves to a PrestoQuery object.
+- It's asynchronous and will return a promise that resolves to a PrestoQuery object. If you want the query ID returned first for long running queries, see the [Query Generator](#query-generator) section.
 - It will automatically retry the query if it fails due to a transient error.
 - It will cancel the query if the client is destroyed.
 - \*It parses big numbers with the BigInt JavaScript primitive. If your Presto response includes a number bigger than `Number.MAX_SAFE_INTEGER`, it will be parsed into a bigint, so you may need to consider that when handling the response, or serializing it.
@@ -109,6 +109,56 @@ Additional notes on the `query` method:
 - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse#browser_compatibility
 
 Otherwise, bigger numbers will lose precision due to the default JavaScript JSON parsing.
+
+## Query Generator
+
+The `queryGenerator` method provides a stepped approach to query execution, returning an async generator that yields results in two parts: first the query ID, then the complete query result. This is particularly useful when you need immediate access to the query ID for monitoring purposes while the query is still executing.
+
+### Parameters
+
+- `query`: The SQL query string to be executed.
+- `options` (optional): An object containing optional parameters:
+  - `catalog` (optional): The catalog to be used for the query.
+  - `schema` (optional): The schema to be used for the query.
+
+### Return Value
+
+Returns an `AsyncGenerator<PrestoQuery>` that yields two values:
+
+1. First yield: The query ID (string)
+2. Second yield: The complete query result (PrestoQuery object)
+
+### Example usage
+
+```typescript
+const client = new PrestoClient({
+  catalog: 'tpcds',
+  host: 'http://localhost',
+  port: 8080,
+  schema: 'sf1',
+  user: 'root',
+})
+
+const query = `SELECT * FROM my_large_table`
+
+try {
+  const queryGen = client.queryGenerator(query)
+
+  // Get the query ID first
+  const { value: queryId } = await queryGen.next()
+  console.log(`Query started with ID: ${queryId}`)
+
+  // You can use the query ID for monitoring here
+
+  // Get the complete results
+  const { value: prestoQuery } = await queryGen.next()
+  console.log('Query completed:', prestoQuery.data)
+} catch (error) {
+  if (error instanceof PrestoError) {
+    console.error('Query failed:', error.errorCode)
+  }
+}
+```
 
 ## Get Query metadata information
 
