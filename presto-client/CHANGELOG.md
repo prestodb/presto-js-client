@@ -2,6 +2,18 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [1.1.0](https://github.com/prestodb/presto-js-client/compare/presto-client-1.0.0...presto-client-1.1.0) (2025-11-28)
+
+
+### Features
+
+* **client:** split query, return query id then response ([#29](https://github.com/prestodb/presto-js-client/issues/29)) ([33f7d92](https://github.com/prestodb/presto-js-client/commit/33f7d92c6e39c16d52a41d18e316c37f96c62e5a))
+
+
+### Bug Fixes
+
+* **client:** parse Presto JSON response with custom reviver and BigInts ([#25](https://github.com/prestodb/presto-js-client/issues/25)) ([e70df0d](https://github.com/prestodb/presto-js-client/commit/e70df0dd5d484bc7aefe44931434a188f976645b))
+
 ## [1.0.0](https://github.com/prestodb/presto-js-client/compare/presto-client-0.1.1...presto-client-1.0.0) (2024-01-24)
 
 
