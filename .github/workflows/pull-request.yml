@@ -6,6 +6,9 @@ on:
       - main
     types: [opened, reopened, synchronize]
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build
